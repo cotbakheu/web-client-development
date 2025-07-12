@@ -1,0 +1,76 @@
+version: 2.1
+
+orbs:
+  cypress: cypress-io/cypress@4
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:22.10
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - run:
+          name: Build the app
+          command: yarn build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist
+            - docker-compose.yml
+            - Dockerfile
+            - node_modules
+            - cypress
+            - cypress.config.ts
+            - vite.config.ts
+            - package.json
+            - src
+
+  cypress-component-test:
+    executor: cypress/default
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install Cypress dependencies
+          command: yarn install
+      - run:
+          name: Run Cypress Component Tests
+          command: yarn cy:run
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - attach_workspace:
+          at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:JzVkYx58+deBb0Pljizztu2M2ppKzVKT5pImCKKvGwk"
+      - run:
+          name: Add server to known_hosts
+          command: |
+            ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts
+      - run:
+          name: Deploy to server
+          command: |
+            ssh $SERVER_USER@$SERVER_IP "mkdir -p $PROJECT_DIR"
+            scp -r docker-compose.yml Dockerfile dist/ $SERVER_USER@$SERVER_IP:$PROJECT_DIR
+            ssh $SERVER_USER@$SERVER_IP \<< EOF
+              cd $PROJECT_DIR
+              sudo docker compose down --rmi all
+              sudo docker compose up -d
+            EOF
+
+workflows:
+  build_test_deploy:
+    jobs:
+      - build
+      - cypress-component-test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - cypress-component-test

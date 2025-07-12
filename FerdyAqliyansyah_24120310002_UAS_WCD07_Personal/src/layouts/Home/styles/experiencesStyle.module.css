@@ -1,0 +1,5 @@
+.experience-ilustration {
+    background-image: url("/work.jpg");
+    background-size: cover;
+    background-position: -100px;
+}

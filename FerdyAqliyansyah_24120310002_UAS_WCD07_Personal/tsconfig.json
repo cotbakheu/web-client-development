@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "types": ["cypress", "@cypress/react"],
+  },
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
