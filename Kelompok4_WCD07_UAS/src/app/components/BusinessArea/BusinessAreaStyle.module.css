@@ -1,0 +1,24 @@
+.location-container {
+    position: relative;
+}
+
+.marker {
+    opacity: 1;
+    position: absolute;
+    top: -71px;
+    left: -16px;
+    transition: all 0.3s ease-in-out;
+    width: 60px;
+}
+
+.map-container {
+    display: none;
+}
+
+.location-container:hover {
+    z-index: 11;
+}
+
+.location-container:hover .map-container {
+    display: block;
+}

@@ -1,0 +1,11 @@
+.submenu {
+    position: relative;
+}
+
+.indicator {
+    display: none;
+}
+
+.submenu:hover .indicator{
+    display: block;
+}
