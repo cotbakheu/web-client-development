@@ -6,7 +6,7 @@ Redesign & analisys usability website
 
 - Adit Praditia (24120300004)
 - Ferdy Aqliyansyah (24120310002)
-- Fikri Andra Arham (24120410003)
+- Fikri Andra irham (24120410003)
 - Husnu Mulyadi (24120300013)
 
 ## Deployment
